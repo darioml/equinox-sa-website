@@ -1,0 +1,38 @@
+-- phpMyAdmin SQL Dump
+-- version 3.4.8
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Apr 06, 2012 at 06:27 PM
+-- Server version: 5.1.61
+-- PHP Version: 5.3.6-13ubuntu3.6
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `equinox`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop`
+--
+
+CREATE TABLE IF NOT EXISTS `shop` (
+  `shopID` int(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `location` text NOT NULL,
+  `owner` varchar(50) NOT NULL,
+  PRIMARY KEY (`shopID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `shop`
+--
+
+INSERT INTO `shop` (`shopID`, `name`, `location`, `owner`) VALUES
+(1, 'eQuinox Labs', 'Germany', 'Administrator'),
+(2, 'eQuinox Store', 'Rwanda', 'Unsure');
+

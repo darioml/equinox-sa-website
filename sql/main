@@ -1,0 +1,102 @@
+-- phpMyAdmin SQL Dump
+-- version 3.4.8
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Apr 06, 2012 at 06:28 PM
+-- Server version: 5.1.61
+-- PHP Version: 5.3.6-13ubuntu3.6
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `equinox`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `codes`
+--
+
+CREATE TABLE IF NOT EXISTS `codes` (
+  `boxID` int(5) NOT NULL,
+  `code` int(8) NOT NULL,
+  `retrieved` int(12) NOT NULL,
+  UNIQUE KEY `boxID` (`boxID`,`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE IF NOT EXISTS `customers` (
+  `cusID` int(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(70) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `location` text NOT NULL,
+  `gender` enum('m','f') NOT NULL,
+  `DOB` varchar(11) NOT NULL,
+  `boxID` int(5) NOT NULL,
+  `shop` int(5) NOT NULL,
+  `payments` int(5) NOT NULL,
+  `lastpayment` int(12) NOT NULL,
+  KEY `cusID` (`cusID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`cusID`, `name`, `phone`, `location`, `gender`, `DOB`, `boxID`, `shop`, `payments`, `lastpayment`) VALUES
+(1, 'Dario Magliocchetti', '07983230145', 'Princes Gardens TZ537', 'm', '29/03/1994', 1, 1, 0, 0),
+(2, 'Yuval Jacob', '045187945', 'Chemical Engineering', 'm', '01/01/1991', 2, 1, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop`
+--
+
+CREATE TABLE IF NOT EXISTS `shop` (
+  `shopID` int(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `location` text NOT NULL,
+  `owner` varchar(50) NOT NULL,
+  PRIMARY KEY (`shopID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `shop`
+--
+
+INSERT INTO `shop` (`shopID`, `name`, `location`, `owner`) VALUES
+(1, 'eQuinox Labs', 'Germany', 'Administrator'),
+(2, 'eQuinox Store', 'Rwanda', 'Unsure');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `login` varchar(20) NOT NULL,
+  `pass` varchar(64) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `level` int(1) NOT NULL,
+  `shopaccess` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `login`, `pass`, `name`, `level`, `shopaccess`) VALUES
+(1, 'admin', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 'Administrator', 1, '');
+
