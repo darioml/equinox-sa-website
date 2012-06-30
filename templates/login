@@ -1,0 +1,27 @@
+{% extends "core" %}
+
+{% block header %}
+<br />
+<div id="logo"><img src="http://e.quinox.org/include/image/equinox_small.jpg" border="0" /></div>
+{% endblock %}
+
+{% block content %}
+<form action="index.php" method="POST">
+<table width ="100%">
+<tr>
+	<td width="50%" style="text-align: right;">Username</td>
+    <td><input type="text" name="username"></td>
+</tr>
+<tr>
+	<td width="50%" style="text-align: right;">Password</td>
+    <td><input type="password" name="password"></td>
+</tr>
+<tr>
+    <td width="50%" style="text-align: right;">
+{% if error is not null %}
+	<div style="color: #FF0000;">{{error}}</div>
+{% endif %}</td>
+    <td><input type="submit" value="Login"></td>
+</tr>
+</form>
+{% endblock %}

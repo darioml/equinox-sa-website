@@ -1,0 +1,41 @@
+<table width="100%" id="details_table">
+{%if member.done|length > 0 %}<tr>
+	<td style="color:#33FF33;" colspan="2">{% if member.done == "generated" %}Successfully added a new code: {{member.lastcode}}{% endif %}</td>
+</tr>{%endif%}
+<tr>
+	<td width="20%">Customer Name</td>
+    <td>{{member.name}}</td>
+</tr>
+<tr>
+	<td>Customer Numer</td>
+    <td>{{member.customerID}}</td>
+</tr>
+{#<tr>
+	<td>Start Date</td>
+    <td>{{member}}</td>
+</tr>#}
+<tr>
+	<td>Mobile Number</td>
+    <td>{{member.telephone}}</td>
+</tr>
+<tr>
+	<td>Battery Box ID</td>
+    <td>{{member.boxID}}</td>
+</tr>
+<tr>
+	<td>Unlock Codes bought</td>
+    <td>{{member.codesused}}</td>
+</tr>
+<tr>
+	<td>Last 5 codes</td>
+    <td>{{pastcodes}}</td>
+</tr>
+<tr>
+	<td>New Code</td>
+    <td><form action="customers.php" method="GET">
+		<input type="hidden" name="do" value="retrieve">
+		<input type="hidden" name="customer" value="{{member.customerID}}">
+		<input type="submit" value="Retrieve new code">
+	</form></td>
+</tr>
+</table>

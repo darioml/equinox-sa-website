@@ -1,0 +1,38 @@
+<table width="100%" id="details_table">
+<tr>
+	<td colspan="2" style="color: #FF3333; text-decoration: underline;">You are making a new unlock code for the following customer</td>
+</tr>
+<tr>
+	<td width="20%">Customer Name</td>
+    <td>{{member.name}}</td>
+</tr>
+<tr>
+	<td>Customer Numer</td>
+    <td>{{member.customerID}}</td>
+</tr>
+{#<tr>
+	<td>Start Date</td>
+    <td>{{member}}</td>
+</tr>#}
+<tr>
+	<td>Mobile Number</td>
+    <td>{{member.telephone}}</td>
+</tr>
+<tr>
+	<td>Battery Box ID</td>
+    <td>{{member.boxID}}</td>
+</tr>
+<tr>
+	<td>Unlock Codes bought</td>
+    <td>{{member.codesused}}</td>
+</tr>
+</table>
+<hr />
+<div style="color: #FF3333; text-decoration: underline;">PUT A WARNING HERE</div>
+<div>
+	<form action="customers.php?do=retrieve&customer={{member.customerID}}" method="post">
+	Code duration: <select name="length">{% for key, value in options %}<option value="{{key}}">{{value}}</option>{%endfor%}</select>
+    <input type="hidden" name="postdo" value="generate">
+	<input type="submit" value="Generate">
+    </form>
+</div>

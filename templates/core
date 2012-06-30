@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+{% block htmlhead %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="css/style.css">
+{% block extrahtmlhead %}{% endblock %}
+{% endblock %}
+</head>
+<body>
+<div id="main">
+
+<div id="head">
+{% block header %}
+{{userbox|raw}}
+<div id="logo"><img src="http://e.quinox.org/include/image/equinox_small.jpg" border="0" /></div>
+{{links|raw}}
+{% endblock %}
+</div>
+
+<br style="clear: both;" />
+
+<div id="content">
+{% block content %}
+{{content|raw}}
+{% endblock %}
+</div>
+
+</div>
+</body>
+</html>

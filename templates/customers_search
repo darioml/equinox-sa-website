@@ -1,0 +1,6 @@
+<div id="search">
+	<form method="GET" action="customers.php">
+    	<input name="search" value="{{query}}">
+        <input type="submit" value="Search Customer Name">
+    </form>
+</div>

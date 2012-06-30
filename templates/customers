@@ -1,0 +1,13 @@
+{% extends "core" %}
+
+{% block extrahtmlhead %}
+	<link rel="stylesheet" href="css/customers.css">
+{% endblock %}
+
+{% block content %}
+{{search|raw}}
+{{filter|raw}}
+<div id="customercontent">
+{{results|raw}}
+</div>
+{% endblock %}

@@ -1,0 +1,3 @@
+<table id="showusers">
+{{content|raw}}
+</table>
