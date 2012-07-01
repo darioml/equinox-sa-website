@@ -20,6 +20,8 @@ define("SAFE_ZONE", 1);
 
 require('global.php');
 
+$core->LoginFunctions();
+
 $links_ = $twig->render('core_links');
 $userbox_ = $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username']));
 

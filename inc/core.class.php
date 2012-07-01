@@ -13,6 +13,8 @@ Description:		Holds the core variables for most of the script!
 
 */
 
+error_reporting(-1);
+
 class eQuinox
 {
 	var $db, $links, $page;

@@ -28,4 +28,3 @@ if (@$_GET['do'] == "logout")
 }
 
 include("inc/core.php");
-$core->LoginFunctions();

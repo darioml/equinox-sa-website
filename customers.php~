@@ -23,6 +23,8 @@ require('global.php');
 include("inc/algorithm.class.php");
 $eQalg = new eQuinoxAlgo();
 
+$core->LoginFunctions();
+
 $links_ = $twig->render('core_links');
 $userbox_ = $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username']));
 $search_ = $twig->render('customers_search', array('query' => @$_GET['search']));
