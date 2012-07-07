@@ -68,19 +68,9 @@ elseif (@$_GET['do'] == "retrieve" && trim(@$_GET['customer']) != "" && is_numer
 		$results_ .= $twig->render('customer_details_table_retr', array('member'=>$row, 'options' => array(0=>'Permanent',4=>'2 Weeks')));
 	}
 }
-elseif (trim(@$_GET['search']) != "") //is there a search present?
+else
 {
-	$customer = $db->escape_string($_GET['search']);
-	
-	//search stuff
-	if ($customer[0] != '^')	{	$customer = "%" . $customer;		}
-	else						{	$customer = substr($customer, 1);	}
-	
-	$results_ .= $core->displayUsers($db->query("SELECT customerID, name FROM customers WHERE name LIKE '$customer%'"));
-}
-else //DEFAULT
-{
-	$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID LIMIT 50"));
+    include("cussearch.php");
 }
 
 
