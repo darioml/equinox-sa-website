@@ -1,8 +1,9 @@
 <div id="links">
     <div id="links_one">
 {% for location, link in __corelinks %}
+{% if ( location == "admin.php") and ( __permission|slice(0,1) == 0 ) %}{%else%}
         <a href="{{location}}"{% if location == __currpage %} style="color: #FFFF99;"{% endif %}>{{link.name}}</a>
-{% endfor %}
+{% endif %}{% endfor %}
     </div>
 {% if __corelinks[__currpage].subpages|length > 0 %}
     <div id="links_two">

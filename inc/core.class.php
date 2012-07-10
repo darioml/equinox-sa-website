@@ -17,7 +17,7 @@ error_reporting(-1);
 
 class eQuinox
 {
-	var $db, $links, $page;
+	var $db, $links, $page, $templates;
 	
 	function __construct($db)
 	{
@@ -59,8 +59,14 @@ class eQuinox
 				if ($result->num_rows > 0)
 				{
 					$row = $result->fetch_assoc();
-					$_SESSION['equinox_code_auth'] = $row['level'];
+					$_SESSION['equinox_code_uid'] = $row['userID'];
 					$_SESSION['equinox_code_username'] = $row['username'];
+                                        $_SESSION['equinox_code_hash'] = md5(time());
+					$_SESSION['equinox_code_auth'] = $row['level'];
+                                        
+					$_SESSION['equinox_code_shops'] = explode($row['shopID'], ',');
+                                        
+                                        $this->db->query("update logins set loginhash = '$_SESSION[equinox_code_hash]' where userID = '$row[userID]'");
 					header("Location: index.php");
 				}
 				else
@@ -73,5 +79,33 @@ class eQuinox
 			
 			exit();
 		}
+                else
+                {
+                    $row = $this->db->query("SELECT * FROM logins WHERE userID = '$_SESSION[equinox_code_uid]' LIMIT 1")->fetch_assoc();
+                    if ($row['loginhash'] == 'logout')
+                    {
+                        session_destroy();
+                        header("Location: index.php");
+                    }
+                    elseif ($row['loginhash'] != $_SESSION['equinox_code_hash'])
+                    {
+                        $_SESSION['equinox_code_uid'] = $row['userID'];
+			$_SESSION['equinox_code_username'] = $row['username'];
+                        $_SESSION['equinox_code_hash'] = md5(time());
+			$_SESSION['equinox_code_auth'] = $row['level'];
+                                        
+			$_SESSION['equinox_code_shops'] = explode($row['shopID'], ',');
+                        
+                        if ($row['loginhash'] != '0')
+                        {
+                            echo "test";
+                            $_SESSION['equinox_code_multiple'] = 1;
+                            $_SESSION['equinox_code_hash'] = $row['loginhash'];
+                            print_r($_SESSION);
+                        }
+			
+                        $this->db->query("update logins set loginhash = '$_SESSION[equinox_code_hash]' where userID = '$row[userID]'");		
+                    }
+                }
 	}
 }

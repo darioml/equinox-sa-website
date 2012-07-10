@@ -15,33 +15,26 @@ Last Modified: 		25 December 2011
 
 
 */
-
 define("SAFE_ZONE", 1);
-
 require('global.php');
-
-$links_ = $twig->render('core_links');
-$userbox_ = $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username']));
-
-//$test = 0x0000;
-//printf("%b", $test);
 
 $content = <<<END
 Beta testing<br>
 currently working:
 <ul>
 <li>View customer data
-<li>Add new code (ALGORITHM doesn't verify with Ashley's program for now, unsure why but have ideas)
+<li>Grant new codes (Algorithm class working 100%)
+<li>Admin permissions (beta, will not be editable by other users until finished!)
 </ul>
 <br />todo:
 <ul>
 <li>Show last 5 codes
 <li>Admin panel to edit member permissions (shop owners) and settings (how many codes until shop owner can generate permanent unlock code)
-<li>Data section
 <li>Show how many days left on current code in member list and member detail view
 </ul>
 
 END;
 
-echo $twig->render('core', array('links'=>$links_, 'userbox'=>$userbox_, 'content'=>$content));
+
+echo $twig->render('core', array('content'=>$content));
 

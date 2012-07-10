@@ -13,9 +13,9 @@
 
 <div id="head">
 {% block header %}
-{{userbox|raw}}
+{{__cp.userbox|raw}}
 <div id="logo"><img src="http://e.quinox.org/include/image/equinox_small.jpg" border="0" /></div>
-{{links|raw}}
+{{__cp.links|raw}}
 {% endblock %}
 </div>
 

@@ -1,0 +1,30 @@
+SQL : level
+About : the kind of login
+
+0 - Shop Keeper
+1 - Administrator
+2 - Super Admin (do NOT give out!)
+
+
+
+######################################################
+______________________________________________________
+
+######################################################
+
+SQL : permission
+About : Bitwise permissions of login
+
+MSB ... LSB
+
+00 - can view admin panel
+01 - can edit all customers (if false, can only edit those of shop) (fully remove edit by setting shopID to 0)
+02 - can add new customer
+03 - can edit current customers
+04 - can soft-delete current customers
+05 - can hard-delete current customers (removes from SQL) (do NOT give out!)
+06 - can add login
+07 - can edit login
+08 - can edit admin
+09 - can edit super admin
+10 - can edit system settings
