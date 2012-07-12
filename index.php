@@ -24,11 +24,12 @@ currently working:
 <ul>
 <li>View customer data
 <li>Grant new codes (Algorithm class working 100%)
+<li>Access code data & Verify the code is proper (public members of algorithm class!)
+<li>Show last 5 codes
 <li>Admin permissions (beta, will not be editable by other users until finished!)
 </ul>
 <br />todo:
 <ul>
-<li>Show last 5 codes
 <li>Admin panel to edit member permissions (shop owners) and settings (how many codes until shop owner can generate permanent unlock code)
 <li>Show how many days left on current code in member list and member detail view
 </ul>

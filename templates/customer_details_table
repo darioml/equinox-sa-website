@@ -1,13 +1,14 @@
-<table width="100%" id="details_table">
+<div id="customertab_name">{{member.name}}</div>
+<table id="customer_details_table">
 {%if member.done|length > 0 %}<tr>
-	<td style="color:#33FF33;" colspan="2">{% if member.done == "generated" %}Successfully added a new code: {{member.lastcode}}{% endif %}</td>
+	<td style="color:#33FF33;" colspan="2">{% if member.done == "generated" %}Successfully added a new code: {{codes.0.code}}{% endif %}</td>
 </tr>{%endif%}
 <tr>
-	<td width="20%">Customer Name</td>
+	<td width="40%">Customer Name</td>
     <td>{{member.name}}</td>
 </tr>
 <tr>
-	<td>Customer Numer</td>
+	<td width="40%">Customer Number</td>
     <td>{{member.customerID}}</td>
 </tr>
 {#<tr>
@@ -17,6 +18,10 @@
 <tr>
 	<td>Mobile Number</td>
     <td>{{member.telephone}}</td>
+</tr>
+<tr{% if member.shopID in o_shopID %} style="background: #001100"{%else%} style="background: #111100"{%endif%}>
+	<td>Shop ID</td>
+    <td>{{member.shopID}}</td>
 </tr>
 <tr>
 	<td>Battery Box ID</td>
@@ -28,7 +33,24 @@
 </tr>
 <tr>
 	<td>Last 5 codes</td>
-    <td>{{pastcodes}}</td>
+    <td>{% for key,value in codes %}
+	<div class="cus_det_codes {% if value.tdleft > 2 %}
+ok
+{% elseif value.type == -1 %}
+bad
+{% elseif value.type == 1 %}
+per
+{% else %}
+war
+{% endif %}">{{codes[key].code}}<div>Count: {{value.count}}<br />
+Generated: {{value.made}}<br />
+Total Time: <b>{{value.total}}</b> {% if value.type != 1 %}[approx: {{value.tdleft}}/{{value.tdtotal}}]{% endif %}
+</div></div>
+{% endfor %}</td>
+</tr>
+<tr>
+	<td>Notes</td>
+    <td>{{member.notes|nl2br}}</td>
 </tr>
 <tr>
 	<td>New Code</td>

@@ -40,13 +40,34 @@ if (@$_GET['do'] == "show" && trim(@$_GET['customer']) != "" && is_numeric($_GET
 	else
 	{
 		$row = $row->fetch_assoc();
-		$row['done'] = @$_GET['done'];
-		if ($row['done'] == 'generated')
+		if (!in_array($row['shopID'], $_SESSION['equinox_code_shops']) && $_SESSION['equinox_code_permission'][1] != 1)
 		{
-			$result = $db->query("SELECT * FROM codes WHERE boxID = '$row[boxID]' ORDER BY generated DESC")->fetch_assoc();
-			$row['lastcode'] = $result['code'];
+			$core->noAccess();
 		}
-		$results_ .= $twig->render('customer_details_table', array('member'=>$row));
+		
+		//Fetch last 5 codes:
+		$result = $db->query("SELECT * FROM codes WHERE boxID = '$row[boxID]' ORDER BY generated DESC LIMIT 5");
+		$codes = array();
+		while ($code = $result->fetch_assoc())
+		{
+			$dura = $eQalg->GetUnlockDays($code['code']);
+			
+			$tdleft = (($code['generated'] + $eQalg->times[$dura]['time']) - time()) / (24*60*60);
+			$codes[] = array(
+							"code"		=> str_pad($code['code'], 10, '0', STR_PAD_LEFT),
+							"made"		=> date("j. M Y", $code['generated']),
+							"count"		=> $eQalg->GetUnlockNumber($code['code']),
+							"total"		=> $eQalg->times[$dura]['name'],
+							"tdtotal"	=> $eQalg->times[$dura]['time']/(24*60*60),
+							"tdleft"	=> ($tdleft < 0) ? 0 : round($tdleft),
+							"type"		=> ($dura == 0) ? 1 : (($tdleft < -2) ? -1 : 0)
+										  );
+			
+		}
+		
+		$row['done'] = @$_GET['done'];
+		
+		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => $codes));
 	}
 }
 elseif (@$_GET['do'] == "retrieve" && trim(@$_GET['customer']) != "" && is_numeric($_GET['customer'])) //show customer info, if it's numeric
@@ -59,19 +80,54 @@ elseif (@$_GET['do'] == "retrieve" && trim(@$_GET['customer']) != "" && is_numer
 	else
 	{
 		$row = $row->fetch_assoc();
-		if ((@$_POST['postdo'] == 'generate') && is_numeric($_POST['length']))
+		if ((@$_POST['postdo'] == 'generate') && is_numeric($_POST['length']) && ($_POST['length'] >= 0 && $_POST['length'] <= 7))
 		{
-			$alg = $eQalg->generate($row['boxID'], 4, $row['codesused']);
+			$alg = $eQalg->generate($row['boxID'], $row['codesused']+1, $_POST['length']);
 			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."');");
 			header("Location: customers.php?do=show&customer=$row[customerID]&done=generated");
 		}
-		$results_ .= $twig->render('customer_details_table_retr', array('member'=>$row, 'options' => array(0=>'Permanent',4=>'2 Weeks')));
+		$results_ .= $twig->render('customer_details_table_retr', array('member'=>$row, 'times' => $eQalg->times));
 	}
 }
-else
+else // search
 {
-    include("cussearch.php");
+    if (@$_SESSION['equinox_code_permission'][1] != 1)
+	{
+		//We don't have global view permissions...
+		//clean the session:
+		if ($_SESSION['equinox_code_shops'] == array(0=>0))
+		{
+			echo $core->noAccess();
+		}
+		foreach($_SESSION['equinox_code_shops'] as $key=>$value)
+		{
+			if (!is_numeric($value))
+			{
+				unset($_SESSION['equinox_code_shops'][$key]);
+			}
+		}
+
+		$sql = "(customers.shopID = '" . implode("' OR customers.shopID = '", $_SESSION['equinox_code_shops']) . "')";
+	}
+
+	if (trim(@$_GET['search']) != "") //is there a search present?
+	{
+		if (isset($sql))	{		$sql .= " AND ";	}
+
+		$customer = $db->escape_string($_GET['search']);
+
+		//search stuff
+		if ($customer[0] != '^')	{	$customer = "%" . $customer;		}
+		else						{	$customer = substr($customer, 1);	}
+
+		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING " . @$sql . "customers.name LIKE '$customer%' LIMIT 50"));
+	}
+	else //DEFAULT
+	{
+		if (isset($sql))	{		$sql = " HAVING " . $sql;	}
+		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID" . @$sql . " LIMIT 50"));
+	}
 }
 
 
-echo $twig->render('customers', array('links'=>$links_, 'userbox'=>$userbox_, 'content'=>"customer shit", 'search' => $search_, 'filter' => $filter_, 'results' => $results_));
+echo $twig->render('customers', array('links'=>$links_, 'userbox'=>$userbox_, 'search' => $search_, 'filter' => $filter_, 'results' => $results_));

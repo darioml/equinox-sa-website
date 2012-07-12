@@ -45,6 +45,13 @@ class eQuinox
 		}
 	}
 	
+	function noAccess()
+	{
+		global $twig;
+		echo $twig->render('core_noaccess');
+		exit();
+	}
+	
 	function LoginFunctions()
 	{
 		global $twig;
@@ -64,7 +71,7 @@ class eQuinox
                                         $_SESSION['equinox_code_hash'] = md5(time());
 					$_SESSION['equinox_code_auth'] = $row['level'];
                                         
-					$_SESSION['equinox_code_shops'] = explode($row['shopID'], ',');
+					$_SESSION['equinox_code_shops'] = explode(',', $row['shopID']);
                                         
                                         $this->db->query("update logins set loginhash = '$_SESSION[equinox_code_hash]' where userID = '$row[userID]'");
 					header("Location: index.php");
@@ -93,18 +100,21 @@ class eQuinox
 			$_SESSION['equinox_code_username'] = $row['username'];
                         $_SESSION['equinox_code_hash'] = md5(time());
 			$_SESSION['equinox_code_auth'] = $row['level'];
-                                        
-			$_SESSION['equinox_code_shops'] = explode($row['shopID'], ',');
                         
-                        if ($row['loginhash'] != '0')
+			$_SESSION['equinox_code_shops'] = explode(',', $row['shopID']);
+                        
+                        if ($row['loginhash'] != '0') // if it's not been blanked...
                         {
-                            echo "test";
                             $_SESSION['equinox_code_multiple'] = 1;
                             $_SESSION['equinox_code_hash'] = $row['loginhash'];
-                            print_r($_SESSION);
                         }
-			
-                        $this->db->query("update logins set loginhash = '$_SESSION[equinox_code_hash]' where userID = '$row[userID]'");		
+			else
+			{
+				//To logout other, have an $ignore_logout.
+				//Also, allow change password!
+				$_SESSION['equinox_code_multiple'] = 0;
+				$this->db->query("update logins set loginhash = '$_SESSION[equinox_code_hash]' where userID = '$row[userID]'");	
+			}
                     }
                 }
 	}

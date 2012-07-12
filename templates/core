@@ -21,12 +21,21 @@
 
 <br style="clear: both;" />
 
+<div id="left_content">
+Sub-page links (look at admin page), and situational (such as retrieve code, edit customer, etc) will come here
+</div>
 <div id="content">
 {% block content %}
 {{content|raw}}
 {% endblock %}
 </div>
-
 </div>
+
+{% block footer %}
+<br style="clear: both;"/>
+<div id="copyright">
+	&copy;2012 eQuinox. All rights reserved<br />
+</div>
+{% endblock %}
 </body>
 </html>

@@ -27,17 +27,28 @@ if (@$_GET['do'] == "logout")
 }
 
 include("inc/core.php");
-//$core->LoginFunctions();
-$test = bindec('000000000');
-$_SESSION['equinox_code_permission'] = $test;
+$core->LoginFunctions();
+
+if (@$_SESSION['equinox_code_shops'] == array(0=>0) && @$_SESSION['equinox_code_permission'][1] != 1)
+{
+	//Not allowed to view customers!
+	unset($core->links["customers.php"]);
+}
+if (@$_SESSION['equinox_code_permission'][0] != 1)
+{
+	unset($core->links["admin.php"]);
+}
+$twig->addGlobal('__corelinks', $core->links);
+
+$test = bindec('11');
 
 $test = decbin($test);
-$test = (strlen($test) > 10) ? 0 : $test;
-$test = strrev(str_pad($test, 10, '0', STR_PAD_LEFT));
+$test = strrev($test);
 
+$_SESSION['equinox_code_permission'] = $test;
 $twig->addGlobal('__permission', $test);
 
 $twig->addGlobal('__cp', array(
     'links' => $twig->render('core_links'),
-    'userbox' => $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username'], 'permission' => $_SESSION['equinox_code_permission'], 'mult' => $_SESSION['equinox_code_multiple']))
+    'userbox' => $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username'], 'permission' => $_SESSION['equinox_code_permission'], 'mult' => @$_SESSION['equinox_code_multiple']))
 ));

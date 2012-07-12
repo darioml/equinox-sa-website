@@ -17,11 +17,12 @@ Last Modified: 		25 December 2011
 */
 
 define("SAFE_ZONE", 1);
-
 require('global.php');
 
-$links_ = $twig->render('core_links');
-$userbox_ = $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username']));
+if ($_SESSION['equinox_code_permission'][0] != 1)
+{
+	$core->noAccess();
+}
 
 if ($_GET['subpage'] == 'editcus' && is_numeric($_GET['cid']))
 {
@@ -33,5 +34,5 @@ elseif ($_GET['subpage'] == 'newcust' || $_GET['subpage'] == 'editcus')
     $content .= $twig->render('admin_cusform',array('member' => $row, 'new' => true));
 }
 
-echo $twig->render('core', array('links'=>$links_, 'userbox'=>$userbox_, 'content'=>$content));
+echo $twig->render('core', array('content'=>$content));
 

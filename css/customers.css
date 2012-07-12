@@ -34,3 +34,43 @@
 	padding-left: 5px;
 	padding-right: 5px;
 }
+
+#customertab_name
+{
+	font-size: large;
+	color: #FFFFFF;
+}
+
+#customer_details_table
+{
+	margin-left: 30px;
+	width: 500px;
+	color: #BBBBBB;
+	table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-style: hidden;
+}
+#customer_details_table td
+{
+	border: 1px dashed #141414;
+	vertical-align: top;
+	padding: 5px;
+}
+
+.cus_det_codes 
+{
+	color: #FFFFFF;
+	margin-bottom: 10px;
+}
+
+.per{	background: #999; color: #000;}
+.ok{	background: #030;}
+.war{	background: #520;}
+.bad{	background: #700;}
+
+.cus_det_codes div
+{
+	font-size: 90%;
+	margin-left: 20px;
+}
