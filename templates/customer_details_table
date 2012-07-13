@@ -52,12 +52,12 @@ Total Time: <b>{{value.total}}</b> {% if value.type != 1 %}[approx: {{value.tdle
 	<td>Notes</td>
     <td>{{member.notes|nl2br}}</td>
 </tr>
-<tr>
+{#<tr>
 	<td>New Code</td>
     <td><form action="customers.php" method="GET">
 		<input type="hidden" name="do" value="retrieve">
 		<input type="hidden" name="customer" value="{{member.customerID}}">
 		<input type="submit" value="Retrieve new code">
 	</form></td>
-</tr>
+</tr>#}
 </table>

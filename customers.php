@@ -33,6 +33,7 @@ $results_ = "";
 if (@$_GET['do'] == "show" && trim(@$_GET['customer']) != "" && is_numeric($_GET['customer'])) //show customer info, if it's numeric
 {
 	$row = $db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING customerID = '".$db->escape_string(@$_GET['customer'])."'");
+		
 	if ($row->num_rows == 0) //nothing found
 	{
 		$results_ .= $twig->render('customer_du_none');
@@ -40,11 +41,11 @@ if (@$_GET['do'] == "show" && trim(@$_GET['customer']) != "" && is_numeric($_GET
 	else
 	{
 		$row = $row->fetch_assoc();
+		
 		if (!in_array($row['shopID'], $_SESSION['equinox_code_shops']) && $_SESSION['equinox_code_permission'][1] != 1)
 		{
 			$core->noAccess();
 		}
-		
 		//Fetch last 5 codes:
 		$result = $db->query("SELECT * FROM codes WHERE boxID = '$row[boxID]' ORDER BY generated DESC LIMIT 5");
 		$codes = array();
@@ -67,12 +68,16 @@ if (@$_GET['do'] == "show" && trim(@$_GET['customer']) != "" && is_numeric($_GET
 		
 		$row['done'] = @$_GET['done'];
 		
+		//Add the extra links for easy admin stuff
+		$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=retrieve&cid={$row['customerID']}\">New Box unlock Code</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a></div>");
+		
 		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => $codes));
 	}
 }
-elseif (@$_GET['do'] == "retrieve" && trim(@$_GET['customer']) != "" && is_numeric($_GET['customer'])) //show customer info, if it's numeric
+elseif (@$_GET['do'] == "retrieve" && trim(@$_GET['cid']) != "" && is_numeric($_GET['cid'])) //show customer info, if it's numeric
 {
-	$row = $db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING customerID = '".$db->escape_string(@$_GET['customer'])."'");
+	$row = $db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING customerID = '".$db->escape_string(@$_GET['cid'])."'");
+	
 	if ($row->num_rows == 0) //nothing found
 	{
 		$results_ .= $twig->render('customer_du_none');
@@ -80,6 +85,12 @@ elseif (@$_GET['do'] == "retrieve" && trim(@$_GET['customer']) != "" && is_numer
 	else
 	{
 		$row = $row->fetch_assoc();
+		
+		if (!in_array($row['shopID'], $_SESSION['equinox_code_shops']) && $_SESSION['equinox_code_permission'][1] != 1)
+		{
+			$core->noAccess();
+		}
+	
 		if ((@$_POST['postdo'] == 'generate') && is_numeric($_POST['length']) && ($_POST['length'] >= 0 && $_POST['length'] <= 7))
 		{
 			$alg = $eQalg->generate($row['boxID'], $row['codesused']+1, $_POST['length']);
@@ -120,12 +131,13 @@ else // search
 		if ($customer[0] != '^')	{	$customer = "%" . $customer;		}
 		else						{	$customer = substr($customer, 1);	}
 
-		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING " . @$sql . "customers.name LIKE '$customer%' LIMIT 50"));
+		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY name HAVING " . @$sql . "customers.name LIKE '$customer%' LIMIT 50"));
 	}
 	else //DEFAULT
 	{
+		$page = (@is_numeric($_GET['page'])) ? ($_GET['page'] * 50) : 0;
 		if (isset($sql))	{		$sql = " HAVING " . $sql;	}
-		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID" . @$sql . " LIMIT 50"));
+		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY name" . @$sql . " LIMIT $page,50"));
 	}
 }
 

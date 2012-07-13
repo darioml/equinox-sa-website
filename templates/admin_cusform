@@ -1,14 +1,7 @@
 {% if new != true %}
-<a href="admin.php?subpage=newcust">Create new user</a>
-<h2>Editing user #{{member.customerID}}</h2>
+<h2>Editing Customer #{{member.customerID}}</h2>
 {%else%}
-<form method="GET">
-    <input type="hidden" name="subpage" value="editcus">
-    Edit customer number: <input type="text" name="cid">
-    <input type="submit" value="Edit">
-</form>
-<span style="font-size: 90%; color: #990000">You can get the customer number from the Customer section!</span>
-<h2>Create new User</h2>
+<h2>Create new Customer</h2>
 {% endif %}
 
 {% block formset %}
@@ -23,23 +16,27 @@
 {% endif %}
 <tr>
     <td>Name:</td>
-    <td><input name="cus_name" type="text" value="{{member.name}}"><td>
+    <td><input name="cus_name" type="text" value="{{member.name}}">{% if error.name is defined %}<div class="error">{{error.name}}</div>{% endif %}<td>
+</tr>
+<tr>
+    <td>Shop ID:</td>
+    <td><input name="cus_shop" type="text" value="{{member.shopID}}">{% if error.shop is defined %}<div class="error">{{error.shop}}</div>{% endif %}<td>
 </tr>
 <tr>
     <td>Telephone number:</td>
-    <td><input name="cus_name" type="text" value="{{member.telephone}}"><td>
+    <td><input name="cus_tel" type="text" value="{{member.telephone}}">{% if error.tel is defined %}<div class="error">{{error.tel}}</div>{% endif %}<td>
 </tr>
 <tr>
     <td>Current Box ID:</td>
-    <td><input name="cus_name" type="text" value="{{member.boxID}}"><td>
+    <td><input name="cus_box" type="text" value="{{member.boxID}}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{% endif %}<td>
 </tr>
 <tr>
     <td>Notes:</td>
-    <td><textarea name="cus_name" rows="5" cols="40">{{member.notes}}</textarea><td>
+    <td><textarea name="cus_notes" rows="5" cols="40">{{member.notes}}</textarea><td>
 </tr>
 <tr>
     <td></td>
-    <td><input type="submit" value="{% if new == true %}Create{% else %}Edit{% endif %}"></td>
+    <td><input type="submit" value="{% if new == true %}Create{% else %}Edit{% endif %}">{% if error.success is defined %}<div class="success">Added new customer <u>{{error.success}}</u> successfully</div>{% endif %}</td>
 </tr>
 </table>
 

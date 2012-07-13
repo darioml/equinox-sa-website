@@ -30,7 +30,7 @@
 <hr />
 <div style="color: #FF3333; text-decoration: underline;">PUT A WARNING HERE</div>
 <div>
-	<form action="customers.php?do=retrieve&customer={{member.customerID}}" method="post">
+	<form action="customers.php?do=retrieve&cid={{member.customerID}}" method="post">
 	Code duration: <select name="length">{% for key, value in times %}<option value="{{key}}">{{value.name}}</option>{%endfor%}</select>
     <input type="hidden" name="postdo" value="generate">
 	<input type="submit" value="Generate">

@@ -9,6 +9,7 @@ body
 {
 	width: 800px;
 	margin: 10px auto 0px auto;
+	border: 1px solid #333333;
 }
 
 #head
@@ -20,6 +21,8 @@ body
 #logo
 {
 	float: left;
+	height: 130px;
+	width: 319px;
 }
 
 #loggedinas
@@ -47,12 +50,8 @@ body
 {
 	color: #DDDD55;
 }
-#links_two
-{
-	margin-top: 0px;
-	margin-left: 30px;
-}
-#links_two a, #links_two a:visited
+
+/*#links_two a, #links_two a:visited
 {
 	margin: 5px 5px;
 	color: #FFFFFF;
@@ -62,10 +61,9 @@ body
 {
 	color: #DDDD55;
 }
-
+*/
 #content{
 	margin-top: 50px;
-	padding: 10px;
 	border: 1px solid #333333;
 	color: #FFFF66;
 	width: 600px;
@@ -73,10 +71,22 @@ body
 }
 
 #left_content {
-	margin-top: 70px;
+	margin-top: 50px;
+	padding: 20px 0 20px 0;
 	float: left;
-	width: 165px;
+	width: 190px;
 	text-align: right;
+	border: 1px solid #333333;
+}
+#left_content a, #left_content a:visited{
+	margin-right: 2px;
+	color: #FFFFFF;
+	text-decoration: none;
+	display:block;
+}
+#left_content a:hover
+{
+	color: #DDDD55;
 }
 
 #search{
@@ -90,4 +100,41 @@ body
 	width: 400px;
 	text-align: center;
 	margin: 40px auto 5px auto;
+}
+
+#findid
+{
+	margin-right: 2px;
+}
+#findid input
+{
+	width: 40px;
+	margin-left: 5px;
+}
+
+#extralinks
+{
+	margin-top: 30px;
+}
+#extralinks p
+{
+	margin: 0 0 0 0;
+	font-size: large;
+	color: #DDDD55;
+	border-bottom: 1px solid white;
+}
+
+.error
+{
+	color: #BB0000;
+	display: inline;
+	margin-left: 10px;
+}
+
+.success
+{
+	color: #009900;
+	display: inline;
+	margin-left: 10px;
+	
 }

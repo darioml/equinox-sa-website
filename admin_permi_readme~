@@ -18,7 +18,6 @@ MSB ... LSB
 
 00 - can view admin panel
 01 - can view all customers (if false, can only edit those of shop) (fully remove edit by setting shopID to 0)
-	Make sure view/retrieve and customer info is working!
 02 - can add new customer (only to own shop ids)
 03 - can edit current customers (only viewable ones!)
 04 - can soft-delete current customers

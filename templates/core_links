@@ -4,11 +4,4 @@
         <a href="{{location}}"{% if location == __currpage %} style="color: #FFFF99;"{% endif %}>{{link.name}}</a>
 {% endfor %}
     </div>
-{% if __corelinks[__currpage].subpages|length > 0 %}
-    <div id="links_two">
-{% for location, link in __corelinks[__currpage].subpages %}
-        <a href="{{__currpage}}?subpage={{location}}"{% if location == __currpage %} style="color: #FFFF99;"{% endif %}>{{link.name}}</a>
-{% endfor %}
-    </div>
-{% endif %}
 </div>

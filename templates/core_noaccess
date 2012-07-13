@@ -1,0 +1,6 @@
+{% extends "core" %}
+
+{% block content %}
+<h2>No permission</h2>
+Looks like you're not supposed to be here...
+{% endblock %}

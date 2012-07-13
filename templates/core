@@ -22,13 +22,23 @@
 <br style="clear: both;" />
 
 <div id="left_content">
-Sub-page links (look at admin page), and situational (such as retrieve code, edit customer, etc) will come here
+{% if __corelinks[__currpage].subpages|length > 0 %}
+    <div id="links_two">
+{% for location, link in __corelinks[__currpage].subpages %}
+{% if link.name == "html" %}
+		{{link.code|raw}}
+{% else %}
+        <a href="{{__currpage}}?subpage={{location}}">{{link.name}}</a>
+{% endif %}
+{% endfor %}
+    </div>
+{% endif %}
+{{ __extralinks|raw }}
 </div>
 <div id="content">
 {% block content %}
 {{content|raw}}
 {% endblock %}
-</div>
 </div>
 
 {% block footer %}
@@ -37,5 +47,6 @@ Sub-page links (look at admin page), and situational (such as retrieve code, edi
 	&copy;2012 eQuinox. All rights reserved<br />
 </div>
 {% endblock %}
+</div>
 </body>
 </html>
