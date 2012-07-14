@@ -29,6 +29,20 @@ if (@$_GET['do'] == "logout")
 include("inc/core.php");
 $core->LoginFunctions();
 
+///////////////////////
+///////////////////////
+$test = bindec('011101');
+
+$test = decbin($test);
+$test = strrev($test);
+
+$_SESSION['equinox_code_permission'] = $test;
+$twig->addGlobal('__permission', $test);
+///////////////////////
+///////////////////////
+
+
+//Unload pages if not allowed to see!
 if (@$_SESSION['equinox_code_shops'] == array(0=>0) && @$_SESSION['equinox_code_permission'][1] != 1)
 {
 	//Not allowed to view customers!
@@ -38,16 +52,17 @@ if (@$_SESSION['equinox_code_permission'][0] != 1)
 {
 	unset($core->links["admin.php"]);
 }
+if ($core->getPermission(2) != 1)
+{
+	unset($core->links['admin.php']['subpages']['newcust']);
+}
+if ($core->getPermission(3) != 1)
+{
+	unset($core->links['admin.php']['subpages']['editcus']);
+}
+
 $twig->addGlobal('__corelinks', $core->links);
-
-$test = bindec('11');
-
-$test = decbin($test);
-$test = strrev($test);
-
-$_SESSION['equinox_code_permission'] = $test;
-$twig->addGlobal('__permission', $test);
-
+//Generate and set page globals!
 $twig->addGlobal('__cp', array(
     'links' => $twig->render('core_links'),
     'userbox' => $twig->render('core_userblock', array('name' => $_SESSION['equinox_code_username'], 'permission' => $_SESSION['equinox_code_permission'], 'mult' => @$_SESSION['equinox_code_multiple']))

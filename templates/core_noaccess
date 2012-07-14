@@ -3,4 +3,5 @@
 {% block content %}
 <h2>No permission</h2>
 Looks like you're not supposed to be here...
+{% if reason|length > 0 %}<br /><br /><u>Reason:</u><br />{{reason}}{% endif %}
 {% endblock %}

@@ -1,1 +1,1 @@
-<tr><td><a href="?{% if search is not null %}search={{search}}&{%endif%}do=show&customer={{customer.customerID}}">{{customer.name}}</a></td><td>Codes Generated: {{customer.codesused}}</td></tr>
+<tr{% if customer.deleted == 1 %} style="background: #330000;"{% endif %}><td><a href="?{% if search is not null %}search={{search}}&{%endif%}do=show&cid={{customer.customerID}}">{{customer.name}}</a></td><td>Codes Generated: {{customer.codesused}}</td></tr>

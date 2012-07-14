@@ -1,5 +1,5 @@
-SQL : level
 About : the kind of login
+SQL : level
 
 0 - Shop Keeper
 1 - Administrator
@@ -18,9 +18,10 @@ MSB ... LSB
 
 00 - can view admin panel
 01 - can view all customers (if false, can only edit those of shop) (fully remove edit by setting shopID to 0)
-02 - can add new customer (only to own shop ids)
+	Make sure view/retrieve and customer info is working!
+02 - can add new customer (only to own shop ids - 01 allowed all shop IDs!)
 03 - can edit current customers (only viewable ones!)
-04 - can soft-delete current customers
+04 - can soft-delete and resture current customers
 05 - can hard-delete current customers (removes from SQL) (do NOT give out!)
 06 - can add login
 07 - can edit login

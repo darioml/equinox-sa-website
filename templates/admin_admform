@@ -1,0 +1,43 @@
+{% if new != true %}
+<h2>Editing Admin #{{member.userID}}</h2>
+{%else%}
+<h2>Create new Admin</h2>
+{% endif %}
+
+{% block formset %}
+<form method="POST">
+{% endblock %}
+<table>
+{% if new != true %}
+<tr>
+    <td>ID:</td>
+    <td>{{member.userID}}<input type="hidden" name="adm_aid" value="{{member.userID}}"><td>
+</tr>
+{% endif %}
+<tr>
+    <td>Username:</td>
+    <td><input name="adm_username" type="text" value="{% if olddata.adm_username is defined %}{{olddata.adm_username}}{% else %}{{member.username}}{% endif %}">{% if error.name is defined %}<div class="error">{{error.username}}</div>{% endif %}<td>
+</tr>
+<tr>
+    <td>Password:</td>
+    <td><input name="cus_shop" type="text" value="{% if olddata.cus_shop is defined %}{{olddata.cus_shop}}{% else %}{{member.shopID}}{% endif %}">{% if error.shop is defined %}<div class="error">{{error.shop}}</div>{% endif %}{% if new != true %} Leave blank to keep current{% endif %}<td>
+</tr>
+<tr>
+    <td>Repeat Password:</td>
+    <td><input name="cus_tel" type="text" value="{% if olddata.cus_tel is defined %}{{olddata.cus_tel}}{% else %}{{member.telephone}}{% endif %}">{% if error.tel is defined %}<div class="error">{{error.tel}}</div>{% endif %}<td>
+</tr>
+<tr>
+    <td>Owner of Shops:</td>
+    <td><input name="cus_box" type="text" value="{% if olddata.cus_box is defined %}{{olddata.cus_box}}{% else %}{{member.boxID}}{% endif %}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{% endif %}<td>
+</tr>
+{#<tr>
+    <td>RAW Permissions:</td>
+    <td><input name="cus_box" type="text" value="{% if olddata.cus_box is defined %}{{olddata.cus_box}}{% else %}{{member.boxID}}{% endif %}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{% endif %}<td>
+</tr>#}
+<tr>
+    <td></td>
+    <td><input type="submit" value="{% if new == true %}Create{% else %}Edit{% endif %}">{% if error.success is defined %}<div class="success">{{error.success}}</div>{% endif %}</td>
+</tr>
+</table>
+
+</form>

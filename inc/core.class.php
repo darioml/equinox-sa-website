@@ -45,10 +45,21 @@ class eQuinox
 		}
 	}
 	
-	function noAccess()
+	function getPermission($index = -1)
+	{
+		return (isset($_SESSION['equinox_code_permission'][$index])) ? (bool)$_SESSION['equinox_code_permission'][$index] : false;
+	}
+	
+	function ShopPermission($shopID, $ownerArray = null)
+	{
+		$ownerArray = ($ownerArray == null) ? @$_SESSION['equinox_code_shops'] : $ownerArray;
+		return ($this->getPermission(1)) ? true : in_array($shopID, $ownerArray);
+	}
+	
+	function noAccess($reason = "")
 	{
 		global $twig;
-		echo $twig->render('core_noaccess');
+		echo $twig->render('core_noaccess', array('reason' => $reason));
 		exit();
 	}
 	

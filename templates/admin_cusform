@@ -1,42 +1,42 @@
 {% if new != true %}
 <h2>Editing Customer #{{member.customerID}}</h2>
+<form action="admin.php?subpage=editcus&cid={{member.customerID}}" method="POST">
 {%else%}
 <h2>Create new Customer</h2>
+<form action="admin.php?subpage=newcust" method="POST">
+{% if error.general is defined %}<div class="error">{{error.general}}</div><br /><br />{% endif %}
 {% endif %}
 
-{% block formset %}
-<form method="POST">
-{% endblock %}
 <table>
 {% if new != true %}
 <tr>
     <td>ID:</td>
-    <td>{{member.customerID}}<td>
+    <td>{{member.customerID}}<input type="hidden" name="cus_cid" value="{{member.customerID}}"><td>
 </tr>
 {% endif %}
 <tr>
     <td>Name:</td>
-    <td><input name="cus_name" type="text" value="{{member.name}}">{% if error.name is defined %}<div class="error">{{error.name}}</div>{% endif %}<td>
+    <td><input name="cus_name" type="text" value="{% if olddata.cus_name is defined %}{{olddata.cus_name}}{% else %}{{member.name}}{% endif %}">{% if error.name is defined %}<div class="error">{{error.name}}</div>{% endif %}<td>
 </tr>
 <tr>
     <td>Shop ID:</td>
-    <td><input name="cus_shop" type="text" value="{{member.shopID}}">{% if error.shop is defined %}<div class="error">{{error.shop}}</div>{% endif %}<td>
+    <td><input name="cus_shop" type="text" value="{% if olddata.cus_shop is defined %}{{olddata.cus_shop}}{% else %}{{member.shopID}}{% endif %}">{% if error.shop is defined %}<div class="error">{{error.shop}}</div>{% endif %}<td>
 </tr>
 <tr>
     <td>Telephone number:</td>
-    <td><input name="cus_tel" type="text" value="{{member.telephone}}">{% if error.tel is defined %}<div class="error">{{error.tel}}</div>{% endif %}<td>
+    <td><input name="cus_tel" type="text" value="{% if olddata.cus_tel is defined %}{{olddata.cus_tel}}{% else %}{{member.telephone}}{% endif %}">{% if error.tel is defined %}<div class="error">{{error.tel}}</div>{% endif %}<td>
 </tr>
 <tr>
     <td>Current Box ID:</td>
-    <td><input name="cus_box" type="text" value="{{member.boxID}}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{% endif %}<td>
+    <td><input name="cus_box" type="text" value="{% if olddata.cus_box is defined %}{{olddata.cus_box}}{% else %}{{member.boxID}}{% endif %}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{%else%} Set to 0 if no box{% endif %}<td>
 </tr>
 <tr>
     <td>Notes:</td>
-    <td><textarea name="cus_notes" rows="5" cols="40">{{member.notes}}</textarea><td>
+    <td><textarea name="cus_notes" rows="5" cols="40">{% if olddata.cus_notes is defined %}{{olddata.cus_notes}}{% else %}{{member.notes}}{% endif %}</textarea><td>
 </tr>
 <tr>
     <td></td>
-    <td><input type="submit" value="{% if new == true %}Create{% else %}Edit{% endif %}">{% if error.success is defined %}<div class="success">Added new customer <u>{{error.success}}</u> successfully</div>{% endif %}</td>
+    <td><input type="submit" value="{% if new == true %}Create{% else %}Edit{% endif %}">{% if error.success is defined %}<div class="success">{{error.success}}</div>{% endif %}</td>
 </tr>
 </table>
 
