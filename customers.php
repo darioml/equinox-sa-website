@@ -125,20 +125,18 @@ elseif (@$_GET['do'] == 'delete' && is_numeric($_GET['cid']) && $core->getPermis
 	}
 	else
 	{
-		if (@$_POST['verify'] == 'yes')
+		$row = $row->fetch_assoc();
+		if ($core->shopPermission($row['shopID']) === true)
 		{
 			$qu = $db->prepare("UPDATE customers SET deleted = '1' WHERE customerID = ?");
 			$qu->bind_param('i', $_GET['cid']);
 			$qu->execute();
 			header("Location: customers.php");
 		}
-		
-		$row = $row->fetch_assoc();
-		
-		//Add the extra links for easy admin stuff
-		$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=show&cid={$row['customerID']}\">Show details</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a></div>");
-		
-		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'times' => $eQalg->times, 'do'=>'delete'));
+		else
+		{
+			$core->noAccess();
+		}
 	}
 }
 else // search
