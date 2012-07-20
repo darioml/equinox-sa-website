@@ -45,6 +45,11 @@ class eQuinox
 		}
 	}
 	
+	function ginput($index, $escape=true)
+	{
+		return ($escape) ? htmlspecialchars(@$_GET[$index]) : @$_GET[$index];
+	}
+	
 	function getPermission($index = -1)
 	{
 		return (isset($_SESSION['equinox_code_permission'][$index])) ? (bool)$_SESSION['equinox_code_permission'][$index] : false;

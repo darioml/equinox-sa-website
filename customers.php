@@ -32,10 +32,10 @@ $results_ = "";
 
 $hidedel = ($core->getPermission(4)) ? null : "deleted = 0 AND ";
 
-if (@$_GET['do'] == "show" && is_numeric(@$_GET['cid'])) //show customer info, if it's numeric
+if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['cid'])) //show customer info, if it's numeric
 {
 	$row = $db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING {$hidedel}customerID = '".$db->escape_string(@$_GET['cid'])."'");
-		
+
 	if ($row->num_rows == 0) //nothing found
 	{
 		$results_ .= $twig->render('customer_du_none');
@@ -44,10 +44,11 @@ if (@$_GET['do'] == "show" && is_numeric(@$_GET['cid'])) //show customer info, i
 	{
 		$row = $row->fetch_assoc();
 		
-		if (!in_array($row['shopID'], $_SESSION['equinox_code_shops']) && $_SESSION['equinox_code_permission'][1] != 1)
+		if ($core->shopPermission($row['shopID']) !== true)
 		{
 			$core->noAccess();
 		}
+		
 		if ($row['boxID'] != 0)
 		{
 			//Fetch last 5 codes:
@@ -70,38 +71,11 @@ if (@$_GET['do'] == "show" && is_numeric(@$_GET['cid'])) //show customer info, i
 
 			}
 		}
-		
-		$row['done'] = @$_GET['done'];
-		
-		//Add the extra links for easy admin stuff
-		$delete = ($core->getPermission(4)) ? "<a href=\"?do=delete&cid={$row['customerID']}\">Delete</a>" : null;
-		$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=retrieve&cid={$row['customerID']}\">New Box unlock Code</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a>{$delete}</div>");
-		
-		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes));
-	}
-}
-elseif (@$_GET['do'] == "retrieve" && is_numeric($_GET['cid'])) //show customer info, if it's numeric
-{
-	$row = $db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY customerID HAVING {$hidedel}customerID = '".$db->escape_string(@$_GET['cid'])."'");
-	
-	if ($row->num_rows == 0) //nothing found
-	{
-		$results_ .= $twig->render('customer_du_none');
-	}
-	else
-	{
-		$row = $row->fetch_assoc();
-		
-		if (!in_array($row['shopID'], $_SESSION['equinox_code_shops']) && $_SESSION['equinox_code_permission'][1] != 1)
-		{
-			$core->noAccess();
-		}
-		
-		if ($row['boxID'] == 0)
+		elseif ($core->ginput('do') == 'retrieve')
 		{
 			$core->noAccess("Cannot add a code to user with no box ID");
 		}
-	
+		
 		if ((@$_POST['postdo'] == 'generate') && is_numeric($_POST['length']) && ($_POST['length'] >= 0 && $_POST['length'] <= 7))
 		{
 			$alg = $eQalg->generate($row['boxID'], $row['codesused']+1, $_POST['length']);
@@ -109,10 +83,13 @@ elseif (@$_GET['do'] == "retrieve" && is_numeric($_GET['cid'])) //show customer 
 			header("Location: customers.php?do=show&cid=$row[customerID]&done=generated");
 		}
 		
-		//Add the extra links for easy admin stuff
-		$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=show&cid={$row['customerID']}\">Show details</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a></div>");
+		$row['done'] = $core->ginput('done');
 		
-		$results_ .= $twig->render('customer_details_table_retr', array('member'=>$row, 'times' => $eQalg->times));
+		//Add the extra links for easy admin stuff
+		$delete = ($core->getPermission(4)) ? "<a href=\"?do=delete&cid={$row['customerID']}\">Delete</a>" : null;
+		$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=retrieve&cid={$row['customerID']}\">New Box unlock Code</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a>{$delete}</div>");
+		
+		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes, 'do'=>$core->ginput('do'), 'times' => $eQalg->times));
 	}
 }
 elseif (@$_GET['do'] == 'delete' && is_numeric($_GET['cid']) && $core->getPermission(4))
@@ -131,7 +108,7 @@ elseif (@$_GET['do'] == 'delete' && is_numeric($_GET['cid']) && $core->getPermis
 			$qu = $db->prepare("UPDATE customers SET deleted = '1' WHERE customerID = ?");
 			$qu->bind_param('i', $_GET['cid']);
 			$qu->execute();
-			header("Location: customers.php");
+			header("Location: customers.php?do=show&cid=" . $_GET['cid']);
 		}
 		else
 		{

@@ -1,4 +1,4 @@
-{% if do == 'delete' %}<div class="error"><b>You are about to delete the following user:</b><br />Once deleted, you cannot view, edit or get new codes for this user.</div><br /><br />
+{% if do == 'retrieve' %}<u>You are making a new unlock code for the following customer:</u><br /><br />
 {%endif%}<div id="customertab_name">{{member.name}}</div>
 <table id="customer_details_table">
 {%if member.done|length > 0 %}<tr>
@@ -61,7 +61,13 @@ Total Time: <b>{{value.total}}</b> {% if value.type != 1 %}[approx: {{value.tdle
 		<input type="submit" value="Retrieve new code">
 	</form></td>
 </tr>#}
-</table>{% if do == 'delete' %}
-<div class="error"><b>Are you sure you want to remove this user?</b></div>
-<form style="display: inline" method="POST" action="customers.php?do=delete&cid={{member.customerID}}"><input type="hidden" name="verify" value="yes"><input type="submit" value="Yes"></form>
-<form style="display: inline" method="GET"><input type="hidden" name="do" value="show"><input type="hidden" name="cid" value="{{member.customerID}}"><input type="submit" value="No"></form>{%endif%}
+</table>{% if do == 'retrieve' %}
+<hr />
+<div style="color: #FF3333; text-decoration: underline;">PUT A WARNING HERE</div>
+<div>
+	<form action="customers.php?do=retrieve&cid={{member.customerID}}" method="post">
+	Code duration: <select name="length">{% for key, value in times %}<option value="{{key}}">{{value.name}}</option>{%endfor%}</select>
+    <input type="hidden" name="postdo" value="generate">
+	<input type="submit" value="Generate">
+    </form>
+</div>{%endif%}
