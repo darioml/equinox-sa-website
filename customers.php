@@ -48,8 +48,8 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 		{
 			$core->noAccess();
 		}
-		
-		if ($row['boxID'] != 0)
+
+		if ($row['boxID'] != '0')
 		{
 			//Fetch last 5 codes:
 			$result = $db->query("SELECT * FROM codes WHERE boxID = '$row[boxID]' ORDER BY generated DESC LIMIT 5");
@@ -66,7 +66,7 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 								"total"		=> $eQalg->times[$dura]['name'],
 								"tdtotal"	=> $eQalg->times[$dura]['time']/(24*60*60),
 								"tdleft"	=> ($tdleft < 0) ? 0 : round($tdleft),
-								"type"		=> ($dura == 0) ? 1 : (($tdleft < -2) ? -1 : 0)
+								"type"		=> ($code['free'] == 1) ? -2 : (($dura == 0) ? 1 : (($tdleft < -2) ? -1 : 0))
 											);
 
 			}
@@ -75,19 +75,48 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 		{
 			$core->noAccess("Cannot add a code to user with no box ID");
 		}
+
+		if (@$_GET['use'] == 'free')
+		{
+			$_POST['postdo'] = 'generate';
+			$_POST['length'] = 1;
+			$_POST['free'] = "on";
+			$db->query("UPDATE customers SET freedays = freedays - 2 WHERE customerID = $row[customerID]");
+		}
 		
 		if ((@$_POST['postdo'] == 'generate') && is_numeric($_POST['length']) && ($_POST['length'] >= 0 && $_POST['length'] <= 7))
 		{
+			//Let's get the last code
+			$result = $db->query("SELECT * FROM codes WHERE boxID = '$row[boxID]' AND free = 0 ORDER BY generated DESC LIMIT 1");
+			$row2 = $result->fetch_assoc();
+
+			$dura = $eQalg->GetUnlockDays($row2['code']);
+			$tdleft = (($row2['generated'] + $eQalg->times[$dura]['time']) - time()) / (24*60*60);
+
+			if (($tdleft > -2) && $_POST['length'] >= 4 && $_POST['free'] != "on")
+			{
+				//2 free easter_days()
+				$db->query("UPDATE customers SET freedays = freedays + 2 WHERE customerID = $row[customerID]");
+			}
+
 			$alg = $eQalg->generate($row['boxID'], $row['codesused']+1, $_POST['length']);
-			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."');");
+			if (@$_POST['free'] == "on")
+			{
+				$f = 1;
+			}
+			else
+			{
+				$f = 0;
+			}
+			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."', $f);");
 			header("Location: customers.php?do=show&cid=$row[customerID]&done=generated");
 		}
 		
 		$row['done'] = $core->ginput('done');
 		
 		//Add the extra links for easy admin stuff
-		$delete = ($core->getPermission(4)) ? "<a href=\"?do=delete&cid={$row['customerID']}\">Delete</a>" : null;
-		$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=retrieve&cid={$row['customerID']}\">New Box unlock Code</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a>{$delete}</div>");
+		//$delete = ($core->getPermission(4)) ? "<a href=\"?do=delete&cid={$row['customerID']}\">Delete</a>" : null;
+		@$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=retrieve&cid={$row['customerID']}\">New Box unlock Code</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a>{$delete}</div>");
 		
 		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes, 'do'=>$core->ginput('do'), 'times' => $eQalg->times));
 	}

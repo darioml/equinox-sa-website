@@ -31,7 +31,7 @@ $core->LoginFunctions();
 
 ///////////////////////
 ///////////////////////
-$test = bindec('011101');
+$test = bindec('111111');
 
 $test = decbin($test);
 $test = strrev($test);

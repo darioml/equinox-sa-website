@@ -62,6 +62,12 @@ if (@$_GET['subpage'] == 'newcust' || @$_GET['subpage'] == 'editcus')
 		}elseif (!is_numeric($_POST['cus_tel'])) {
 			$error['tel'] = 'Must be a number';
 		}
+
+		if (strlen(trim($_POST['cus_paid'])) < 1) {
+			$error['paid'] = 'Must be filled out';
+		}elseif (!is_numeric($_POST['cus_paid'])) {
+			$error['paid'] = 'Must be a number';
+		}
 		
 		if (strlen(trim($_POST['cus_shop'])) < 1) {
 			$error['shop'] = 'Must be filled out';
@@ -75,7 +81,9 @@ if (@$_GET['subpage'] == 'newcust' || @$_GET['subpage'] == 'editcus')
 		
 		if (strlen(trim($_POST['cus_box'])) < 1) {
 			$error['box'] = 'Must be filled out';
-		}elseif (!is_numeric($_POST['cus_box'])) {
+		} elseif (substr($_POST['cus_box'], 0, 1) != 's' && substr($_POST['cus_box'], 0, 1) != 'l') {
+			$error['box'] = 'Invalid boxID (must begin with s or l)';
+		}elseif (!is_numeric(substr($_POST['cus_box'], 1))) {
 			$error['box'] = 'Must be a number';
 		}elseif ($_POST['cus_box'] != $boxid && $_POST['cus_box'] != 0) {
 			//Make sure the box is not in use by another customer
@@ -105,8 +113,8 @@ if (@$_GET['subpage'] == 'newcust' || @$_GET['subpage'] == 'editcus')
 			if (!isset($_POST['cus_cid']))
 			{
 				//New customer
-				$test = $db->prepare("INSERT INTO `customers` (`customerID`, `shopID`, `name`, `telephone`, `boxID`, `notes`) VALUES (NULL, ?, ?, ?, ?, ?);");
-				$test->bind_param('issis', $_POST['cus_shop'], $_POST['cus_name'], $_POST['cus_tel'], $_POST['cus_box'], $_POST['cus_notes']);
+				$test = $db->prepare("INSERT INTO `customers` (`customerID`, `shopID`, `name`, `telephone`, `boxID`, `notes`, `paid`) VALUES (NULL, ?, ?, ?, ?, ?, ?);");
+				$test->bind_param('issssd', $_POST['cus_shop'], $_POST['cus_name'], $_POST['cus_tel'], $_POST['cus_box'], $_POST['cus_notes'], $_POST['cus_paid']);
 				$test->execute();
 				
 				header("Location: admin.php?subpage=newcust&done=" . $test->insert_id);
@@ -114,8 +122,8 @@ if (@$_GET['subpage'] == 'newcust' || @$_GET['subpage'] == 'editcus')
 			else
 			{
 				//We're trying to edit:
-				$test = $db->prepare("UPDATE `customers` SET `shopID` = ?, `name` = ?, `telephone` = ?, `boxID` = ?, `notes` = ? WHERE `customerID` = ?;");
-				$test->bind_param('issisi', $_POST['cus_shop'], $_POST['cus_name'], $_POST['cus_tel'], $_POST['cus_box'], $_POST['cus_notes'], $_POST['cus_cid']);
+				$test = $db->prepare("UPDATE `customers` SET `shopID` = ?, `name` = ?, `telephone` = ?, `boxID` = ?, `notes` = ?, paid = ? WHERE `customerID` = ?;");
+				$test->bind_param('issssdi', $_POST['cus_shop'], $_POST['cus_name'], $_POST['cus_tel'], $_POST['cus_box'], $_POST['cus_notes'], $_POST['cus_paid'], $_POST['cus_cid']);
 				$test->execute();
 				$test->close();
 				

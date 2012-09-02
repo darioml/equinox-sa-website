@@ -67,7 +67,8 @@
 .per{	background: #999; color: #000;}
 .ok{	background: #030;}
 .war{	background: #520;}
-.bad{	background: #700;}
+.free{	background: #DEC400; color: #000;}
+.bad{	background: #700; text-decoration: line-through;}
 
 .cus_det_codes div
 {

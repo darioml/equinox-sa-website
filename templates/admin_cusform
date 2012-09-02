@@ -28,7 +28,11 @@
 </tr>
 <tr>
     <td>Current Box ID:</td>
-    <td><input name="cus_box" type="text" value="{% if olddata.cus_box is defined %}{{olddata.cus_box}}{% else %}{{member.boxID}}{% endif %}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{%else%} Set to 0 if no box{% endif %}<td>
+    <td>{#<select name="type"><option value="s">Small</option><option value="b">Large</option>#}<input name="cus_box" type="text" value="{% if olddata.cus_box is defined %}{{olddata.cus_box}}{% else %}{{member.boxID}}{% endif %}">{% if error.box is defined %}<div class="error">{{error.box}}</div>{%else%} Set to 0 if no box{% endif %}<td>
+</tr>
+<tr>
+    <td>Paid:</td>
+    <td><input name="cus_paid" type="text" value="{% if olddata.cus_paid is defined %}{{olddata.cus_paid}}{% else %}{{member.paid}}{% endif %}">{% if error.paid is defined %}<div class="error">{{error.paid}}</div>{% endif %}</td>
 </tr>
 <tr>
     <td>Notes:</td>

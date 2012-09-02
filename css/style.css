@@ -9,7 +9,6 @@ body
 {
 	width: 800px;
 	margin: 10px auto 0px auto;
-	border: 1px solid #333333;
 }
 
 #head
@@ -64,7 +63,6 @@ body
 */
 #content{
 	margin-top: 50px;
-	border: 1px solid #333333;
 	color: #FFFF66;
 	width: 600px;
 	float: right;
@@ -76,7 +74,7 @@ body
 	float: left;
 	width: 190px;
 	text-align: right;
-	border: 1px solid #333333;
+	border-right: 1px solid #333322;
 }
 #left_content a, #left_content a:visited{
 	margin-right: 2px;
