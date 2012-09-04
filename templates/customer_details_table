@@ -24,11 +24,15 @@
 	<td>Shop ID</td>
     <td>{{member.shopID}}</td>
 </tr>
+<tr style="background: {%if percent > 95 %}#001100{%elseif percent > 80 %}#0f1100{%elseif percent > 60 %}#110f00{%elseif percent > 40 %}#110900{%else%}#110000{%endif%}">
+	<td>Paid</td>
+    <td>{{member.paid}} <span style="font-size: 90%;margin-left: 50px;">{{percent}}% paid</span></td>
+</tr>
 <tr>
 	<td>Battery Box ID</td>
     <td>{% if member.boxID == '0' %}None{% else %}{{member.boxID}}{% endif %}</td>
 </tr>
-{% if member.boxID != '0' %}<tr{% if member.freedays > 0 %} style="background: #141400;"{%endif%}>
+{% if member.boxID != '0' %}<tr{% if member.freedays > 0 %} style="background: #001100;"{%endif%}>
 	<td>Free Days</td>
     <td>{% if member.freedays > 0 %}{{member.freedays}}{% if member.freedays >= 2 %} - <a href="?do=show&cid={{member.customerID}}&use=free">Get Free Code</a>{%endif%}{%else%}0{%endif%}</td>
 </tr>

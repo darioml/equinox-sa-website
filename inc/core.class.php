@@ -17,14 +17,39 @@ error_reporting(-1);
 
 class eQuinox
 {
-	var $db, $links, $page, $templates;
+	var $db, $links, $page, $templates, $settings;
 	
 	function __construct($db)
 	{
 		require('settings.php');
+		
 		$this->db = $db;
 		$this->page = basename($_SERVER['SCRIPT_NAME']);
 		$this->links = $setting['pages'];
+
+		$settings = array (
+				'small2day' => 250,
+				'small5day' => 550,
+				'small7day' => 750,
+				'small14day' => 1500,
+				'small21day' => 2250,
+				'small28day' => 3000,
+				'small56day' => 6000,
+				'smalltotal' => 70000,
+				'big2day' => 300,
+				'big5day' => 1250,
+				'big7day' => 1750,
+				'big14day' => 3500,
+				'big21day' => 5250,
+				'big28day' => 7000,
+				'big56day' => 14000,
+				'bigtotal' => 170000		
+			);
+
+		foreach ($settings as $key=>$value)
+		{
+			@$this->settings->$key = $value;
+		}
 	}
 	
 	function displayUsers($result)

@@ -108,7 +108,33 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 			{
 				$f = 0;
 			}
-			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."', $f);");
+			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."', '$f');");
+
+			//now add the cost to the account!
+			//first, how much was it?
+			if ($_POST['length'] != 0)
+			{
+				$length = array (
+					'perm',
+					'2day',
+					'5day',
+					'7day',
+					'14day',
+					'21day',
+					'28day',
+					'56day');
+				if (substr($row['boxID'], 0, 1) == 's')
+				{
+					$set = "small";
+				}
+				else
+				{
+					$set = "big";
+				}
+				$set .= $length[$_POST['length']];
+
+				$db->query("UPDATE customers SET paid = paid + " . $core->settings->$set . " WHERE customerID = $row[customerID]");
+			}
 			header("Location: customers.php?do=show&cid=$row[customerID]&done=generated");
 		}
 		
@@ -118,7 +144,9 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 		//$delete = ($core->getPermission(4)) ? "<a href=\"?do=delete&cid={$row['customerID']}\">Delete</a>" : null;
 		@$twig->addGlobal('__extralinks', "<div id=\"extralinks\"><p>User Options</p><a href=\"?do=retrieve&cid={$row['customerID']}\">New Box unlock Code</a><a href=\"admin.php?subpage=editcus&cid={$row['customerID']}\">Edit Customer</a>{$delete}</div>");
 		
-		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes, 'do'=>$core->ginput('do'), 'times' => $eQalg->times));
+		$total = (substr($row['boxID'],0,1) == 's') ? $core->settings->smalltotal : $core->settings->bigtotal;
+
+		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes, 'do'=>$core->ginput('do'), 'times' => $eQalg->times, 'percent' => round(($row['paid'] / $total) * 100,1)));
 	}
 }
 elseif (@$_GET['do'] == 'delete' && is_numeric($_GET['cid']) && $core->getPermission(4))
