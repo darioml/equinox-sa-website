@@ -30,19 +30,19 @@ class eQuinox
 		$settings = array (
 				'small2day' => 250,
 				'small5day' => 550,
-				'small7day' => 750,
-				'small14day' => 1500,
+				'small7day' => 800,
+				'small14day' => 1400,
 				'small21day' => 2250,
-				'small28day' => 3000,
-				'small56day' => 6000,
+				'small28day' => 2750,
+				'small56day' => 5500,
 				'smalltotal' => 70000,
 				'big2day' => 300,
 				'big5day' => 1250,
 				'big7day' => 1750,
 				'big14day' => 3500,
 				'big21day' => 5250,
-				'big28day' => 7000,
-				'big56day' => 14000,
+				'big28day' => 6750,
+				'big56day' => 13500,
 				'bigtotal' => 170000		
 			);
 
@@ -64,6 +64,8 @@ class eQuinox
 		{
 			while ($row = $result->fetch_assoc())
 			{
+				$total = (substr($row['boxID'],0,1) == 's') ? $this->settings->smalltotal : $this->settings->bigtotal;
+				$row['percent'] = round(($row['paid'] / $total) * 100,1);
 				@$content .= $twig->render('customer_du_cont', array('search'=>@$_GET['search'], 'customer'=>$row));
 			}
 			return $twig->render('customer_du_body', array("content"=>$content));

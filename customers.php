@@ -65,7 +65,7 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 								"count"		=> $eQalg->GetUnlockNumber($code['code']),
 								"total"		=> $eQalg->times[$dura]['name'],
 								"tdtotal"	=> $eQalg->times[$dura]['time']/(24*60*60),
-								"tdleft"	=> ($tdleft < 0) ? 0 : round($tdleft),
+								"tdleft"	=> ($tdleft < 0) ? ($eQalg->times[$dura]['time'] / (24*60*60)) : (($eQalg->times[$dura]['time'] / (24*60*60)) - round($tdleft)),
 								"type"		=> ($code['free'] == 1) ? -2 : (($dura == 0) ? 1 : (($tdleft < -2) ? -1 : 0))
 											);
 
@@ -80,7 +80,7 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 		{
 			$_POST['postdo'] = 'generate';
 			$_POST['length'] = 1;
-			$_POST['free'] = "on";
+			$_POST['geninfo'] = "free";
 			$db->query("UPDATE customers SET freedays = freedays - 2 WHERE customerID = $row[customerID]");
 		}
 		
@@ -93,14 +93,14 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 			$dura = $eQalg->GetUnlockDays($row2['code']);
 			$tdleft = (($row2['generated'] + $eQalg->times[$dura]['time']) - time()) / (24*60*60);
 
-			if (($tdleft > -2) && $_POST['length'] >= 4 && $_POST['free'] != "on")
+			if (($tdleft > -2) && $_POST['length'] >= 4 && $_POST['geninfo'] != "free")
 			{
 				//2 free easter_days()
 				$db->query("UPDATE customers SET freedays = freedays + 2 WHERE customerID = $row[customerID]");
 			}
 
-			$alg = $eQalg->generate($row['boxID'], $row['codesused']+1, $_POST['length']);
-			if (@$_POST['free'] == "on")
+			$alg = $eQalg->generate(substr($row['boxID'],1), $row['codesused']+1, $_POST['length']);
+			if (@$_POST['geninfo'] == "free")
 			{
 				$f = 1;
 			}
@@ -108,11 +108,12 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 			{
 				$f = 0;
 			}
-			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."', '$f');");
+			$_POST['geninfo'] = $db->escape_string($_POST['geninfo']);
+			$db->query("INSERT INTO codes VALUES ('$row[boxID]', '$alg', '".time()."', '$f', '$_POST[geninfo]');");
 
 			//now add the cost to the account!
 			//first, how much was it?
-			if ($_POST['length'] != 0)
+			if ($_POST['length'] != 0 && $_POST['geninfo'] != 'free')
 			{
 				$length = array (
 					'perm',
@@ -146,7 +147,7 @@ if ((@$_GET['do'] == "show" || @$_GET['do'] = 'retrieve') && is_numeric(@$_GET['
 		
 		$total = (substr($row['boxID'],0,1) == 's') ? $core->settings->smalltotal : $core->settings->bigtotal;
 
-		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes, 'do'=>$core->ginput('do'), 'times' => $eQalg->times, 'percent' => round(($row['paid'] / $total) * 100,1)));
+		$results_ .= $twig->render('customer_details_table', array('member'=>$row, 'o_shopID'=>$_SESSION['equinox_code_shops'], 'codes' => @$codes, 'do'=>$core->ginput('do'), 'times' => $eQalg->times, 'settings' => $core->settings, 'percent' => round(($row['paid'] / $total) * 100,1)));
 	}
 }
 elseif (@$_GET['do'] == 'delete' && is_numeric($_GET['cid']) && $core->getPermission(4))

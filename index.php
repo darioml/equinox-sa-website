@@ -19,8 +19,10 @@ define("SAFE_ZONE", 1);
 require('global.php');
 
 $content = <<<END
-If you encounter any issues with the system, or for any requests, please contact me directly:
-dm1911 (at) imperial.ac.uk
+Welcome to eQuinox IzubaBox, $_SESSION[equinox_code_username],<br />
+This is the online portal for the standalone project. Here we manage all codes created for our system.<br /><br /><br />
+<hr /><span style="font-size: 90%">If you encounter any issues with the system, or for any requests, please contact me directly:
+dm1911 (at) imperial.ac.uk</span>
 
 END;
 

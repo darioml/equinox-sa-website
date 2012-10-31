@@ -2,7 +2,7 @@
 {%endif%}<div id="customertab_name">{{member.name}}</div>
 <table id="customer_details_table">
 {%if member.done|length > 0 %}<tr>
-	<td style="color:#33FF33;" colspan="2">{% if member.done == "generated" %}Successfully added a new code: {{codes.0.code}}{% endif %}</td>
+	<td style="color:#00FF00; font-size: 120%; font-weight: bold;" colspan="2">{% if member.done == "generated" %}Successfully added a new code: <u>{{codes.0.code}}</u>{% endif %}</td>
 </tr>{%endif%}
 <tr>
 	<td width="40%">Customer Name</td>
@@ -45,7 +45,7 @@
     <td>{% for key,value in codes %}
 	<div class="cus_det_codes {% if value.type == -2 %}
 free
-{% elseif value.tdleft > 2 %}
+{% elseif value.tdleft < ((value.tdtotal) - 2) %}
 ok
 {% elseif value.type == -1 %}
 bad
@@ -75,71 +75,74 @@ Total Time: <b>{{value.total}}</b> {% if value.type != 1 %}[approx: {{value.tdle
 </tr>#}
 </table>{% if do == 'retrieve' %}
 <hr />
-<div style="color: #FF3333;"><u>Please make sure you have collected the neccessary funds to generate the unlock code!</u><br />
+<div style="color: #FF0000;"><u>Please make sure you have collected the neccessary funds to generate the unlock code!</u><br />
 {% if member.boxID|slice(0,1) == 's' %}
-<table>
+<table style="color: #FFFFFF;">
 	<tr>
 		<td>2 days</td>
-		<td>250RWF</td>
+		<td>{{attribute(settings, 'small2day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>5 days</td>
-		<td>550RWF</td>
+		<td>{{attribute(settings, 'small5day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>7 days</td>
-		<td>750RWF</td>
+		<td>{{attribute(settings, 'small7day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>2 weeks</td>
-		<td>1500RWF</td>
+		<td>{{attribute(settings, 'small14day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>3 weeks</td>
-		<td>2250RWF</td>
+		<td>{{attribute(settings, 'small21day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>4 weeks</td>
-		<td>3000 RWF</td>
+		<td>{{attribute(settings, 'small28day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>8 weeks</td>
-		<td>6000 RWF</td>
+		<td>{{attribute(settings, 'small56day')}}FRw</td>
 	</tr></table>{%else%}
-<table>
+<table style="color: #FFFFFF;" rules="rows">
 	<tr>
 		<td>2 days</td>
-		<td>300RWF</td>
+		<td>{{attribute(settings, 'big2day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>5 days</td>
-		<td>1250RWF</td>
+		<td>{{attribute(settings, 'big5day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>7 days</td>
-		<td>1750RWF</td>
+		<td>{{attribute(settings, 'big7day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>2 weeks</td>
-		<td>3500RWF</td>
+		<td>{{attribute(settings, 'big14day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>3 weeks</td>
-		<td>5250RWF</td>
+		<td>{{attribute(settings, 'big21day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>4 weeks</td>
-		<td>7000 RWF</td>
+		<td>{{attribute(settings, 'big28day')}}FRw</td>
 	</tr>
 	<tr>
 		<td>8 weeks</td>
-		<td>14000 RWF</td>
+		<td>{{attribute(settings, 'big56day')}}FRw</td>
 	</tr></table>{%endif%}</div>
 <div>
 	<form action="customers.php?do=retrieve&cid={{member.customerID}}" method="post">
 	Code duration: <select name="length">{% for key, value in times %}<option value="{{key}}" {%if key == 6 %}selected="selected"{%endif%}>{{value.name}}</option>{%endfor%}</select>
-	<input type="checkbox" name="free" />Free code?<br />
-    <input type="hidden" name="postdo" value="generate">
+    <input type="hidden" name="postdo" value="generate"><br />
+	<input type="radio" name="geninfo" value="cash" checked>Cash/Kiosk |
+	<input type="radio" name="geninfo" value="mtn">MTN Mobile Money |
+	<input type="radio" name="geninfo" value="tigo">TIGO Cash |
+	<input type="radio" name="geninfo" value="free">Free<br />
 	<input type="submit" value="Generate">
     </form>
 </div>{%endif%}

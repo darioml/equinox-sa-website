@@ -110,8 +110,9 @@ if (@$_GET['subpage'] == 'newcust' || @$_GET['subpage'] == 'editcus')
 		if (!isset($error))
 		{
 			//Are we a new customer (unset id)
-			if (!isset($_POST['cus_cid']))
+			if ($_POST['neworedit'] == 'new')
 			{
+
 				//New customer
 				$test = $db->prepare("INSERT INTO `customers` (`customerID`, `shopID`, `name`, `telephone`, `boxID`, `notes`, `paid`) VALUES (NULL, ?, ?, ?, ?, ?, ?);");
 				$test->bind_param('issssd', $_POST['cus_shop'], $_POST['cus_name'], $_POST['cus_tel'], $_POST['cus_box'], $_POST['cus_notes'], $_POST['cus_paid']);
@@ -119,7 +120,7 @@ if (@$_GET['subpage'] == 'newcust' || @$_GET['subpage'] == 'editcus')
 				
 				header("Location: admin.php?subpage=newcust&done=" . $test->insert_id);
 			}
-			else
+			elseif ($_POST['neworedit'] == 'edit')
 			{
 				//We're trying to edit:
 				$test = $db->prepare("UPDATE `customers` SET `shopID` = ?, `name` = ?, `telephone` = ?, `boxID` = ?, `notes` = ?, paid = ? WHERE `customerID` = ?;");

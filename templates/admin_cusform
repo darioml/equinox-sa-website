@@ -1,9 +1,11 @@
 {% if new != true %}
 <h2>Editing Customer #{{member.customerID}}</h2>
 <form action="admin.php?subpage=editcus&cid={{member.customerID}}" method="POST">
+<input type="hidden" name="neworedit" value="edit" />
 {%else%}
 <h2>Create new Customer</h2>
 <form action="admin.php?subpage=newcust" method="POST">
+<input type="hidden" name="neworedit" value="new" />
 {% if error.general is defined %}<div class="error">{{error.general}}</div><br /><br />{% endif %}
 {% endif %}
 
