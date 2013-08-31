@@ -12,6 +12,7 @@ Page Name:			core.php
 Description:		Holds the core variables for most of the script!
 
 */
+session_save_path(__dir__.'/tmp');
 session_start();
 
 if (!defined("SAFE_ZONE"))

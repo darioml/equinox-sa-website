@@ -209,7 +209,20 @@ else // search
 	}
 	else //DEFAULT
 	{
-		$page = (@is_numeric($_GET['page'])) ? ($_GET['page'] * 50) : 0;
+		$temp = $db->query('SELECT COUNT(customerID) FROM customers')->fetch_assoc();
+		$temp = $temp["COUNT(customerID)"];
+		$temp = ceil($temp / 50);
+		if ($temp > 1) {
+
+			$results_ .= "<div id='page-manager'>";
+			for ($i = 0; $i < $temp ; $i++)
+			{
+				$results_ .= "<span><a href='?page=$i'>Page $i</a></span>";
+			}
+			$results_ .= "</div>";
+		}
+
+		$page = (@is_numeric($_GET['page'])) ? (($_GET['page']) * 50) : 0;
 		if (isset($sql))	{		$sql;	} else { $sql="true"; }
 		$results_ .= $core->displayUsers($db->query("SELECT customers.*, count(codes.code) as codesused FROM customers LEFT JOIN codes ON customers.boxID = codes.boxID GROUP BY name HAVING {$hidedel}" . @$sql . " LIMIT $page,50"));
 	}

@@ -2,27 +2,16 @@
 
 {% block header %}
 <br />
-<div id="logo"><img src="http://e.quinox.org/include/image/equinox_small.jpg" border="0" /></div>
+<div id="logo-login"><img src="http://e.quinox.org/include/image/equinox_small.jpg" border="0" /></div>
 {% endblock %}
 
 {% block totalcontent %}
-<form action="index.php" method="POST">
-<table width ="100%">
-<tr>
-	<td width="50%" style="text-align: right;">Username</td>
-    <td><input type="text" name="username"></td>
-</tr>
-<tr>
-	<td width="50%" style="text-align: right;">Password</td>
-    <td><input type="password" name="password"></td>
-</tr>
-<tr>
-    <td width="50%" style="text-align: right;">
-{% if error is not null %}
-	<div class="error">{{error}}</div>
-{% endif %}</td>
-    <td><input type="submit" value="Login"></td>
-</tr>
-</table>
-</form>
+<div id="login-hero">
+	<form action="index.php" method="POST">
+	{% if error is not null %}<div class="alert alert-error" style="width:50%; margin: 0 auto 20px;">{{error}}</div>{% endif %}
+		<input type="text" name="username" placeholder="Username"><br />
+		<input type="password" name="password" placeholder="Password"><br />
+	<input type="submit" class="btn btn-large btn-primary" value="Login">
+	</form>
+</div>
 {% endblock %}
