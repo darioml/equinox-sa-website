@@ -35,7 +35,7 @@ class eQuinox
 				'small21day' => 2250,
 				'small28day' => 2750,
 				'small56day' => 5500,
-				'smalltotal' => 70000,
+				'smalltotal' => 100000,
 				'big2day' => 300,
 				'big5day' => 1250,
 				'big7day' => 1750,
